@@ -1,40 +1,37 @@
-import { useState, useEffect } from 'react'
-import './index.css'
-import { createApi } from 'unsplash-js'
-
-const unsplash = createApi({
-  accessKey: 'YOUR_ACCESS_KEY_HERE',
-})
+import React from 'react'
+import { BrowserRouter as Router, Switch, Route, NavLink } from 'react-router-dom'
+import Home from './home'
+import About from './about'
+import Post from './post'
 
 function App() {
-  const [photos, setPhotos] = useState([])
-
-  useEffect(() => {
-    unsplash.photos
-      .list({ query: 'nature', perPage: 6 })
-      .then((result) => {
-        if (result.errors) {
-          console.log(result.errors[0])
-        } else {
-          setPhotos(result.response.results)
-        }
-      })
-  }, [])
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-gray-800 mb-4">My Blog</h1>
-      <div className="grid grid-cols-2 gap-4">
-        {photos.map((photo) => (
-          <img
-            key={photo.id}
-            src={photo.urls.small}
-            alt={photo.alt_description}
-            className="rounded-lg shadow-lg"
-          />
-        ))}
-      </div>
-    </div>
+    <Router>
+      <nav className="bg-gray-800">
+        <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+          <NavLink
+            exact
+            to="/"
+            className="text-xl font-bold text-gray-100 hover:text-gray-300"
+            activeClassName="text-gray-300"
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/about"
+            className="text-xl font-bold text-gray-100 hover:text-gray-300"
+            activeClassName="text-gray-300"
+          >
+            About
+          </NavLink>
+        </div>
+      </nav>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/about" component={About} />
+        <Route path="/posts/:id" component={Post} />
+      </Switch>
+    </Router>
   )
 }
 
